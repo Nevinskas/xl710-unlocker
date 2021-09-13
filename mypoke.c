@@ -43,7 +43,7 @@ int main(int argc, const char **argv) {
    */
   int phy0_offset = FILL_ME_IN; // 0x6870 on my card; find it with mytool
   
-  int offset = 2*(phy0_offset + 0x8); /* PHY0 + MISC0 */
+  int offset = 2*(phy0_offset + FILL_ME_IN); /* PHY0 + MISC0(register with 11bit) */
   int length = 2;
   int mod    = 0;
   
@@ -57,7 +57,7 @@ int main(int argc, const char **argv) {
     eeprom->cmd    = ETHTOOL_SEEPROM;
     eeprom->magic  = (devid << 16) | (I40E_NVM_SA << I40E_NVM_TRANS_SHIFT) | mod;
     eeprom->len    = length;
-    eeprom->offset = offset + 0xc*i*2;
+    eeprom->offset = offset + FILL_ME_IN *i*2; /* offset between 000b values */
     
     /* Remove bit 0800 = qualification from whatever was in register 8 */
     *(uint16_t*)(eeprom+1) = FILL_ME_IN; // 0x230c = 0x2b0c - 0x8000
