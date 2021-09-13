@@ -25,8 +25,8 @@ int main(int argc, const char **argv) {
     01:00.3 0200: 8086:1572 (rev 01)
                        ^^^^ find this field
    */
-  int devid  = FILL_ME_IN; // 0x1572 = Intel X710 DA4
-  const char *ethDev = FILL_ME_IN; // "eth3" = If card is on eth3
+  int devid  = 0x1572; // 0x1572 = Intel X710 DA4
+  const char *ethDev = "enp4s0f0"; // "eth3" = If card is on eth3
   /* Find a record like this:
     00006870 + 00 => 000b	<= Start of PHY0 recod
     00006870 + 01 => 0022
@@ -41,9 +41,9 @@ int main(int argc, const char **argv) {
     00006870 + 0a => 0a1e
     00006870 + 0b => 0003 
    */
-  int phy0_offset = FILL_ME_IN; // 0x6870 on my card; find it with mytool
+  int phy0_offset = 0x6947; // 0x6870 on my card; find it with mytool
   
-  int offset = 2*(phy0_offset + 0x8); /* PHY0 + MISC0 */
+  int offset = 2*(phy0_offset + 0x1); /* PHY0 + MISC0 */
   int length = 2;
   int mod    = 0;
   
@@ -57,10 +57,10 @@ int main(int argc, const char **argv) {
     eeprom->cmd    = ETHTOOL_SEEPROM;
     eeprom->magic  = (devid << 16) | (I40E_NVM_SA << I40E_NVM_TRANS_SHIFT) | mod;
     eeprom->len    = length;
-    eeprom->offset = offset + 0xc*i*2;
+    eeprom->offset = offset + 0xe*i*2;
     
     /* Remove bit 0800 = qualification from whatever was in register 8 */
-    *(uint16_t*)(eeprom+1) = FILL_ME_IN; // 0x230c = 0x2b0c - 0x8000
+    *(uint16_t*)(eeprom+1) = 0x630C; // 0x230c = 0x2b0c - 0x8000
     
     memset(&ifr, 0, sizeof(ifr));
     strcpy(ifr.ifr_name, ethDev);
